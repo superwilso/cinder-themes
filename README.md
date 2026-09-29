@@ -16,9 +16,14 @@ you download will load.
 
 1. Open Flint and go to the **Palettes** page.
 2. Click **Choose…** and pick a folder for your palettes.
-3. Click **Download shared**. Flint downloads every palette here that is not already in your folder.
-   It never replaces a file you already have.
-4. Click **Check**, then **Send to the player**.
+3. Connect the player and choose its internal memory on the **Sync** page.
+4. Click **Shared palettes**. Every palette here is listed, drawn by day and by night. Type in the
+   search box to narrow it: part of a name, *light*, *dark* or *accent*.
+5. Click **Install** on the one you want. It goes into your folder and onto the player. Flint never
+   replaces a file of the same name that you already have.
+6. On the player, open **Settings ▸ Display ▸ Palette** and pick it.
+
+**Get all** downloads every palette here into your folder instead.
 
 **By hand:**
 
@@ -77,10 +82,19 @@ cargo run --manifest-path checker/Cargo.toml             # check, change nothing
 cargo run --manifest-path checker/Cargo.toml -- --write  # also rebuild the index, previews and gallery
 ```
 
-## Now Playing layouts
+## Designing for Cinder
 
-Custom Now Playing screens are planned, but not built yet. They would be shared the same way,
-under [`layouts/`](layouts). See Cinder's
+A palette changes colours. A **style** changes the layout, type and the shape of controls. Cinder
+has three Now Playing styles: Cinder, Nocturne and Terminal. Every palette here works with every
+style.
+
+To design a palette, a screen or a whole style, start with Cinder's
+[design guide](https://github.com/superwilso/Cinder/blob/main/docs/DESIGN_GUIDE.md). It covers the
+colour tokens, type sizes, touch targets and what Now Playing must keep. Mockups made to it can be
+proposed as an issue on [Cinder](https://github.com/superwilso/Cinder/issues).
+
+Layout files for Now Playing, shared here like palettes, are planned but not built. See
+[`layouts/`](layouts) and Cinder's
 [`docs/PLAN_now_playing_layouts.md`](https://github.com/superwilso/Cinder/blob/main/docs/PLAN_now_playing_layouts.md).
 
 ## Licence

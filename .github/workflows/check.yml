@@ -1,0 +1,36 @@
+# Every palette is checked with Cinder's own rules (flint-core carries them). On main, the index
+# Flint downloads from, the previews and GALLERY.md are rebuilt and committed.
+name: Check palettes
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: checker
+      - name: Check every palette the way the player does
+        if: github.event_name == 'pull_request'
+        run: cargo run -q --manifest-path checker/Cargo.toml
+      - name: Check, and rebuild the index, previews and gallery
+        if: github.event_name != 'pull_request'
+        run: cargo run -q --manifest-path checker/Cargo.toml -- --write
+      - name: Commit what changed
+        if: github.event_name != 'pull_request'
+        run: |
+          git add palettes/index.txt previews GALLERY.md
+          if git diff --cached --quiet; then exit 0; fi
+          git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+            commit -m "Rebuild the index, previews and gallery"
+          git push

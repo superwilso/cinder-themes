@@ -1,0 +1,3 @@
+paper.palette
+slate.palette
+sony.palette

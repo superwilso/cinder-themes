@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Cinder (the firmware these palettes are for)
+    url: https://github.com/superwilso/Cinder
+    about: Bugs in Cinder itself go here.
+  - name: Flint (makes, checks, sends and downloads palettes)
+    url: https://github.com/superwilso/flint
+    about: Bugs in Flint go here.

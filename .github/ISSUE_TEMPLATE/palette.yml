@@ -1,0 +1,39 @@
+name: Share a palette
+description: Paste a .palette file to add it to the shared palettes. No git needed.
+title: "Palette: "
+labels: ["palette"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for sharing. Flint's **Palettes ▸ New palette ▸ Share…** fills this form in for you.
+        By hand: paste the whole file below. Once a maintainer labels the issue `accepted`, a bot checks it
+        with Cinder's own rules and opens a pull request that adds it. Nothing else is needed from you.
+  - type: input
+    id: name
+    attributes:
+      label: Name
+      description: What the player shows, 1 to 16 characters. The file is named after it.
+      placeholder: Late Night
+    validations:
+      required: true
+  - type: textarea
+    id: palette
+    attributes:
+      label: The palette file
+      description: The whole .palette file, as text.
+      render: ini
+    validations:
+      required: true
+  - type: textarea
+    id: notes
+    attributes:
+      label: Anything to say about it
+      description: Optional. What it is for, or what it is based on.
+  - type: checkboxes
+    id: licence
+    attributes:
+      label: Sharing
+      options:
+        - label: I made this palette, and it can be shared under this repository's MIT licence.
+          required: true

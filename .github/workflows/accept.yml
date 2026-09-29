@@ -1,0 +1,92 @@
+# A maintainer labels a "Share a palette" issue `accepted`: the palette in it is checked with
+# Cinder's own rules and, if it passes, a pull request adds it. If it fails, the issue is told why.
+name: Accept a shared palette
+
+on:
+  issues:
+    types: [labeled]
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
+jobs:
+  accept:
+    if: github.event.label.name == 'accepted' && contains(github.event.issue.labels.*.name, 'palette')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: checker
+      - name: Take the palette out of the issue
+        id: take
+        env:
+          BODY: ${{ github.event.issue.body }}
+        run: |
+          python3 - <<'PY'
+          import os, re, sys
+          body = os.environ["BODY"].replace("\r\n", "\n")
+          def section(title):
+              m = re.search(r"### " + re.escape(title) + r"\n\n(.*?)(?=\n### |\Z)", body, re.S)
+              return m.group(1).strip() if m else ""
+          name = section("Name")
+          text = section("The palette file")
+          text = re.sub(r"^```[a-z]*\n|\n```$", "", text.strip())
+          # The id the player would use: lowercase, spaces as -, nothing it would refuse.
+          pid = re.sub(r"-+", "-", re.sub(r"[^a-z0-9_-]", "", re.sub(r"\s+", "-", name.lower()))).strip("-")[:32]
+          if pid == "cinder":
+              pid = "cinder-2"
+          out = os.environ["GITHUB_OUTPUT"]
+          if not pid or not text:
+              open(out, "a").write("ok=false\n")
+              sys.exit(0)
+          path = f"palettes/{pid}.palette"
+          if os.path.exists(path):
+              open(out, "a").write(f"ok=exists\nfile={pid}.palette\n")
+              sys.exit(0)
+          open(path, "w").write(text + "\n")
+          open(out, "a").write(f"ok=true\nfile={pid}.palette\nname={name}\n")
+          PY
+      - name: Check it
+        id: check
+        if: steps.take.outputs.ok == 'true'
+        run: |
+          set +e
+          cargo run -q --manifest-path checker/Cargo.toml > check.txt 2>&1
+          echo "code=$?" >> "$GITHUB_OUTPUT"
+          cat check.txt
+      - name: Open the pull request
+        if: steps.take.outputs.ok == 'true' && steps.check.outputs.code == '0'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          FILE: ${{ steps.take.outputs.file }}
+          NAME: ${{ steps.take.outputs.name }}
+          ISSUE: ${{ github.event.issue.number }}
+          AUTHOR: ${{ github.event.issue.user.login }}
+        run: |
+          branch="palette/issue-$ISSUE"
+          git checkout -b "$branch"
+          git add "palettes/$FILE"
+          git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+            commit -m "Add the $NAME palette (#$ISSUE, by @$AUTHOR)"
+          git push -u origin "$branch"
+          gh pr create --title "Add the $NAME palette" \
+            --body "From #$ISSUE by @$AUTHOR. Checked with Cinder's rules. Closes #$ISSUE."
+      - name: Say why not
+        if: steps.take.outputs.ok != 'true' || steps.check.outputs.code != '0'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISSUE: ${{ github.event.issue.number }}
+          OK: ${{ steps.take.outputs.ok }}
+          FILE: ${{ steps.take.outputs.file }}
+        run: |
+          case "$OK" in
+            false) msg="I could not find a name and a palette file in this issue." ;;
+            exists) msg="There is already a palette called \`$FILE\`. Please choose another name." ;;
+            *) msg=$(printf 'Cinder would refuse this palette:\n\n```\n%s\n```\n\nFlint'"'"'s palette editor shows these as you type.' "$(grep REFUSED check.txt)") ;;
+          esac
+          gh issue comment "$ISSUE" --body "$msg"
+          gh issue edit "$ISSUE" --remove-label accepted

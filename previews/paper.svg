@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="320" height="96" viewBox="0 0 320 96" font-family="Segoe UI, Helvetica, Arial, sans-serif">
+<g transform="translate(0 0)">
+  <rect width="160" height="96" fill="#f4f1ea"/>
+  <rect width="160" height="18" fill="#ebe6dc"/>
+  <rect y="18" width="160" height="1" fill="#d6d0c4"/>
+  <text x="8" y="13" font-size="9" fill="#8f887d">DAY</text>
+  <rect x="8" y="26" width="30" height="30" fill="#ebe6dc" stroke="#d6d0c4"/>
+  <text x="46" y="38" font-size="11" font-weight="600" fill="#1c1a17">Title</text>
+  <text x="46" y="52" font-size="10" fill="#5f5a52">Artist</text>
+  <rect x="8" y="66" width="144" height="3" rx="1.5" fill="#d6d0c4"/>
+  <rect x="8" y="66" width="62" height="3" rx="1.5" fill="#c4471a"/>
+  <text x="8" y="86" font-size="8" fill="#8f887d">FLAC 24/96</text>
+  <circle cx="140" cy="84" r="8" fill="#c4471a"/>
+  <path d="M137 80 L145 84 L137 88 Z" fill="#ffffff"/>
+</g>
+<g transform="translate(160 0)">
+  <rect width="160" height="96" fill="#000000"/>
+  <rect width="160" height="18" fill="#050404"/>
+  <rect y="18" width="160" height="1" fill="#0c0a08"/>
+  <text x="8" y="13" font-size="9" fill="#201d18">NIGHT</text>
+  <rect x="8" y="26" width="30" height="30" fill="#050404" stroke="#0c0a08"/>
+  <text x="46" y="38" font-size="11" font-weight="600" fill="#4d463d">Title</text>
+  <text x="46" y="52" font-size="10" fill="#322d27">Artist</text>
+  <rect x="8" y="66" width="144" height="3" rx="1.5" fill="#0c0a08"/>
+  <rect x="8" y="66" width="62" height="3" rx="1.5" fill="#491e08"/>
+  <text x="8" y="86" font-size="8" fill="#201d18">FLAC 24/96</text>
+  <circle cx="140" cy="84" r="8" fill="#491e08"/>
+  <path d="M137 80 L145 84 L137 88 Z" fill="#000000"/>
+</g>
+</svg>

@@ -1,0 +1,12 @@
+[package]
+name = "cinder-themes-check"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+publish = false
+description = "Checks the shared palettes with Cinder's own rules, and draws their previews"
+
+# flint-core carries the player's palette rules, tested against Cinder's own files. Checking with it
+# means a palette that passes here is one the player loads.
+[dependencies]
+flint-core = { git = "https://github.com/superwilso/flint", branch = "main" }

@@ -12,4 +12,4 @@ dependencies = [
 [[package]]
 name = "flint-core"
 version = "0.2.1"
-source = "git+https://github.com/superwilso/flint?branch=main#58c27f2e58ca4aa0198339c0129546a804f57152"
+source = "git+https://github.com/superwilso/flint?branch=main#5ba18abe98cda8218c3dc29023bc92f3d7e75922"

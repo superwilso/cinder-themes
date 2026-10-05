@@ -27,7 +27,7 @@ jobs:
           BODY: ${{ github.event.issue.body }}
         run: |
           python3 - <<'PY'
-          import os, re, sys
+          import os, re, subprocess, sys
           body = os.environ["BODY"].replace("\r\n", "\n")
           def section(title):
               m = re.search(r"### " + re.escape(title) + r"\n\n(.*?)(?=\n### |\Z)", body, re.S)
@@ -35,10 +35,9 @@ jobs:
           name = section("Name")
           text = section("The palette file")
           text = re.sub(r"^```[a-z]*\n|\n```$", "", text.strip())
-          # The id the player would use: lowercase, spaces as -, nothing it would refuse.
-          pid = re.sub(r"-+", "-", re.sub(r"[^a-z0-9_-]", "", re.sub(r"\s+", "-", name.lower()))).strip("-")[:32]
-          if pid == "cinder":
-              pid = "cinder-2"
+          # The id the player and Flint use, from the same function (flint_core::palette::id_for).
+          pid = subprocess.run(["cargo", "run", "-q", "--manifest-path", "checker/Cargo.toml", "--", "--id", name],
+                               capture_output=True, text=True, check=True).stdout.strip()
           out = os.environ["GITHUB_OUTPUT"]
           if not pid or not text:
               open(out, "a").write("ok=false\n")

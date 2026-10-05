@@ -2,6 +2,7 @@
 //!
 //!     cargo run --manifest-path checker/Cargo.toml             check, change nothing
 //!     cargo run --manifest-path checker/Cargo.toml -- --write  also rebuild the index and previews
+//!     cargo run --manifest-path checker/Cargo.toml -- --id NAME  print the id a palette NAME gets
 //!
 //! `--write` rebuilds `palettes/index.txt` (what Flint's "Download shared" reads), one preview per
 //! palette in `previews/`, and `GALLERY.md`. CI runs it on every push to main, so nobody has to.
@@ -12,13 +13,18 @@ use std::fs;
 use std::path::Path;
 use std::process::ExitCode;
 
-use flint_core::palette::{check_file, palette_stem, Palette, Shown, MAX_BYTES};
+use flint_core::palette::{check_file, id_for, palette_stem, Palette, Shown, MAX_BYTES};
 
 const DIR: &str = "palettes";
 const INDEX: &str = "index.txt";
 
 fn main() -> ExitCode {
-    let write = std::env::args().any(|a| a == "--write");
+    let args: Vec<String> = std::env::args().collect();
+    if let Some(i) = args.iter().position(|a| a == "--id") {
+        println!("{}", id_for(args.get(i + 1).map_or("", String::as_str)));
+        return ExitCode::SUCCESS;
+    }
+    let write = args.iter().any(|a| a == "--write");
     let mut names: Vec<String> = match fs::read_dir(DIR) {
         Ok(rd) => rd.flatten().map(|e| e.file_name().to_string_lossy().into_owned()).collect(),
         Err(e) => {

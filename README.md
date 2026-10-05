@@ -93,8 +93,7 @@ To design a palette, a screen or a whole style, start with Cinder's
 colour tokens, type sizes, touch targets and what Now Playing must keep. Mockups made to it can be
 proposed as an issue on [Cinder](https://github.com/superwilso/Cinder/issues).
 
-Layout files for Now Playing, shared here like palettes, are planned but not built. See
-[`layouts/`](layouts) and Cinder's
+Layout files for Now Playing, shared here like palettes, are planned but not built. See Cinder's
 [`docs/PLAN_now_playing_layouts.md`](https://github.com/superwilso/Cinder/blob/main/docs/PLAN_now_playing_layouts.md).
 
 ## Licence
